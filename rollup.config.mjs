@@ -10,7 +10,8 @@ export default [
     output: [
       { file: fullPath('esm.js'), format: 'es' },
       { file: fullPath('cjs.js'), format: 'cjs' },
-      { file: fullPath('js'), format: 'umd', name: "Subscribe" },
+      // 如果需要 umd 支持，请配置 name 以便在全局支持使用
+      { file: fullPath('js'), format: 'umd', name: '{{ projectName }}' }
     ],
     plugins: [ts()]
   },
