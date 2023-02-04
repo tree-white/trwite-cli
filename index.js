@@ -14,11 +14,8 @@ import * as _ from './utils.js'
 const TEMPLATES = {
   'rollup+ts': {
     github: 'github:tree-white/trwite-cli#rollup+ts',
-    description: '初始Rollup打包工具 + TS超集 项目模版,主要用于开发组件/依赖库'
-  },
-  'vue3+ts+vite': {
-    github: 'https://github.com:tree-white/trwite-cli#rollup+ts',
-    description: '初始Rollup打包工具 + TS超集 项目模版,主要用于开发组件/依赖库'
+    description: '初始Rollup打包工具 + TS超集 项目模版,主要用于开发组件/依赖库',
+    replacePath: ['package.json', 'dome.html', 'rollup.config.mjs']
   }
 }
 
@@ -55,7 +52,7 @@ program
       ])
       .then(answers => {
         const { templateName, projectName } = answers
-        const { github } = TEMPLATES[templateName]
+        const { github, replacePath } = TEMPLATES[templateName]
         const spinner = ora(_.Text('开始下载模版中...', 'yellowBright,bold')).start()
 
         download(github, projectName, { clone: true }, downloadFail => {
@@ -65,12 +62,19 @@ program
           }
 
           // 用户输入的数据解析替换到 package.json 文件中
-          const packagePath = `${projectName}/package.json`
-          const packageContent = fs.readFileSync(packagePath, 'utf8')
-          const packageResult = handlebars.compile(packageContent)(answers)
-          fs.writeFileSync(packagePath, packageResult)
+          // const packagePath = `${projectName}/package.json`
+          // const packageContent = fs.readFileSync(packagePath, 'utf8')
+          // const packageResult = handlebars.compile(packageContent)(answers)
+          // fs.writeFileSync(packagePath, packageResult)
+          replaceValue(
+            replacePath.map(path => `${projectName}/${path}`),
+            answers
+          )
 
           spinner.succeed('项目初始化成功')
+
+          console.log(_.Tip('请执行命令安装项目依赖：'))
+          console.log(_.Text('1. npm install\n2. yarn\n3. pnpm install', 'greenBright'))
         })
       })
       .catch(error => {
@@ -85,8 +89,23 @@ program
   .action(() => {
     console.log(_.Tip('可选模版 ↓', 'greenBright'))
     Object.entries(TEMPLATES).forEach(([name, data]) => {
-      console.log(_.Text(name, 'blueBright,bold', 'success'), _.space(10), data.description)
+      console.log(_.Tip(name, 'blueBright,bold', 'success'), _.space(5), data.description)
     })
   })
 
 program.parse()
+
+/**
+ * 替换内容
+ * @param {string|string[]} path 替换的路径 支持 数组形式
+ * @param {any} data
+ */
+function replaceValue(path, data) {
+  path = Array.isArray(path) ? path : path.split(',')
+
+  path.forEach(filePath => {
+    const initialContent = fs.readFileSync(filePath, 'utf8')
+    const replacedContent = handlebars.compile(initialContent)(data)
+    fs.writeFileSync(filePath, replacedContent)
+  })
+}
