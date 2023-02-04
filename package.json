@@ -1,25 +1,27 @@
 {
-  "name": "trwite-cli",
+  "name": "{{ projectName }}",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "{{ description }}",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/index.js",
   "type": "module",
-  "bin": {
-    "trwite-cli": "index.js"
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build": "rollup -c"
   },
-  "keywords": [
-    "前端脚手架",
-    "组件脚手架"
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
-  "author": "Trwite <trwite@126.com>",
+  "keywords": [],
+  "author": "{{ author }}",
   "license": "MIT",
-  "dependencies": {
-    "chalk": "^5.2.0",
-    "commander": "^10.0.0",
-    "download-git-repo": "^3.0.2",
-    "handlebars": "^4.7.7",
-    "inquirer": "^9.1.4",
-    "log-symbols": "^5.1.0",
-    "ora": "^6.1.2"
+  "devDependencies": {
+    "rollup": "^3.10.0",
+    "rollup-plugin-dts": "^5.1.1",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "typescript": "^4.9.4"
   }
 }

@@ -1,2 +1,3 @@
-# trwite-cli
-自用脚手架，分支用于存放各种初始化模版的
+# Rollup + TS
+
+- 使用 Rollup 打包工具 + TypeScript 类型规范
