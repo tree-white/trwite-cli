@@ -8,7 +8,6 @@ import fs from 'fs'
 import ora from 'ora'
 import chalk from 'chalk'
 import * as _ from './utils.js'
-import logSymbols from 'log-symbols'
 
 // 使用 Node 开发命令行工具所执行的 JavaScript 脚本必须在顶部加入 #!/usr/bin/env node 声明
 
@@ -54,9 +53,11 @@ program
         },
         { type: 'input', name: 'author', message: '请输入作者名称', default: 'Trwite <trwite@126.com>' }
       ])
-      .then(({ templateName, projectName }) => {
+      .then(answers => {
+        const { templateName, projectName } = answers
         const { github } = TEMPLATES[templateName]
         const spinner = ora(_.Text('开始下载模版中...', 'yellowBright,bold')).start()
+
         download(github, projectName, { clone: true }, downloadFail => {
           if (downloadFail) {
             spinner.fail(chalk.redBright(`模版下载失败 => ${downloadFail.message}`)) // 下载失败提示
@@ -67,7 +68,6 @@ program
           const packagePath = `${projectName}/package.json`
           const packageContent = fs.readFileSync(packagePath, 'utf8')
           const packageResult = handlebars.compile(packageContent)(answers)
-          console.log('>>>>>> packageResult=>', packageResult)
           fs.writeFileSync(packagePath, packageResult)
 
           spinner.succeed('项目初始化成功')
@@ -76,36 +76,6 @@ program
       .catch(error => {
         console.log('>>>>>> 错误了=>', error)
       })
-
-    // 使用 ora 做命令行 loading 效果
-    // const spinner = ora(chalk.yellowBright('正在下载模版中...')).start()
-    // download(downloadUrl, projectName, { clone: true }, err => {
-    //   if (err) {
-    //     spinner.fail(chalk.redBright('模版下载失败')) // 下载失败提示
-    //     return
-    //   }
-    //   spinner.succeed(chalk.greenBright('模版下成功')) // 下载成功提示
-    //   // 读取 package.json 读取出来 并修改动态值
-    //   inquirer
-    //     .prompt([
-    //       { type: 'input', name: 'name', message: '请输入项目名称' },
-    //       { type: 'input', name: 'description', message: '请输入简介' },
-    //       { type: 'input', name: 'author', message: '请输入作者名称' }
-    //     ])
-    //     .then(answers => {
-    //       console.log('>>>>>> answers=>', answers)
-    //       // 用户输入的数据解析替换到 package.json 文件中
-    //       const packagePath = `${projectName}/package.json`
-    //       const packageContent = fs.readFileSync(packagePath, 'utf8')
-    //       const packageResult = handlebars.compile(packageContent)(answers)
-    //       console.log('>>>>>> packageResult=>', packageResult)
-    //       fs.writeFileSync(packagePath, packageResult)
-    //       console.log('初始化模版成功')
-    //     })
-    //     .catch(error => {
-    //       console.log('>>>>>> error=>', error)
-    //     })
-    // })
   })
 
 // 查看模版列表指令
