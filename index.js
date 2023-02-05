@@ -7,12 +7,13 @@ import ora from 'ora'
 import chalk from 'chalk'
 import * as _ from './utils.js'
 import { exec } from 'child_process'
+import fs from 'fs'
 
 // 使用 Node 开发命令行工具所执行的 JavaScript 脚本必须在顶部加入 #!/usr/bin/env node 声明
 
 const TEMPLATES = {
   'rollup+ts': {
-    github: 'github:tree-white/trwite-cli#rollup+ts',
+    repository: 'github:tree-white/trwite-cli#rollup+ts',
     description: '初始Rollup打包工具 + TS超集 项目模版,主要用于开发组件/依赖库',
     replacePath: ['package.json', 'dome.html', 'rollup.config.mjs']
   }
@@ -58,12 +59,12 @@ program
       ])
 
       const { templateName, projectName, manage } = answers
-      const { github, replacePath } = TEMPLATES[templateName]
-      const spinner = ora(_.Text('开始下载模版中...', 'yellowBright,bold')).start()
+      const { repository, replacePath } = TEMPLATES[templateName]
+      const initial = ora(_.Text('开始下载模版中...', 'yellowBright,bold')).start()
 
-      download(github, projectName, { clone: true }, async downloadFail => {
+      download(repository, projectName, { clone: true }, async downloadFail => {
         if (downloadFail) {
-          spinner.fail(chalk.redBright(_.Text(`模版下载失败 => ${downloadFail.message}`, 'redBright'))) // 下载失败提示
+          initial.fail(chalk.redBright(_.Text(`模版下载失败 => ${downloadFail.message}`, 'redBright'))) // 下载失败提示
           return
         }
 
@@ -71,15 +72,20 @@ program
           replacePath.map(path => `${projectName}/${path}`),
           answers
         )
-        spinner.succeed(_.Text('项目初始化成功', 'greenBright'))
 
+        initial.succeed(_.Text('模版下载成功', 'greenBright'))
+
+        const installBundles = ora(_.Text('安装依赖中...', 'blue,bold')).start()
         const { install } = COMMAND[manage]
         const { status } = await execSync(`cd ${projectName} && ${install}`)
         if (!status) {
-          console.log(_.Tip('依赖安装失败,请手动执行:', 'red', 'warning'))
+          installBundles.fail(_.Text('依赖安装失败,请手动执行:', 'redBright,bold'))
+          console.log('')
           console.log(_.Tip(`cd ${projectName}`))
           console.log(_.Tip(install))
+          return
         }
+        installBundles.succeed(_.Text('项目初始化成功', 'greenBright,bold'))
       })
     } catch (error) {
       console.log('>>>>>> 错误了=>', error)
@@ -103,6 +109,19 @@ program
     })
   })
 
+// 把项目绑定到示例代码上
+program
+  .command('bind')
+  .description('把项目绑定到示例代码上')
+  .action(async () => {
+    const { bind } = await inquirer.prompt([
+      { type: 'confirm', name: 'bind', message: _.Text('是否将当前项目绑定至"TrwiteCli"上?') }
+    ])
+    if (!bind) return
+
+    const file = fs.readFileSync('package.json', 'utf-8')
+    console.log('>>>>>> file=>', file)
+  })
 program.parse()
 
 /**
