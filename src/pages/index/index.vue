@@ -12,7 +12,6 @@
 
 <script setup lang="ts">
 import { useDemoStore } from '@/stores'
-import { ref } from 'vue'
 const title = ref('Demo数字：')
 const demoStore = useDemoStore()
 </script>
