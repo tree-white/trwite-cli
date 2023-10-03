@@ -1,15 +1,20 @@
 <template>
   <view class="content">
     <uni-card title="Hello">
-      <view style="margin-bottom: 20rpx">{{ title }}</view>
-      <button type="primary">按钮</button>
+      <view style="margin-bottom: 20rpx">{{ title }} {{ demoStore.count }}</view>
+      <view style="display: flex; gap: 20rpx">
+        <button type="primary" @tap="demoStore.add">加</button>
+        <button type="warn" @tap="demoStore.sub">减</button>
+      </view>
     </uni-card>
   </view>
 </template>
 
 <script setup lang="ts">
+import { useDemoStore } from '@/stores'
 import { ref } from 'vue'
-const title = ref('这是一张Uni-UI测试卡片')
+const title = ref('Demo数字：')
+const demoStore = useDemoStore()
 </script>
 
 <style>
