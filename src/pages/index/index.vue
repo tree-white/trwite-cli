@@ -1,15 +1,15 @@
 <template>
   <view class="content">
-    <image class="logo" src="/static/logo.png" />
-    <view class="text-area">
-      <text class="title">{{ title }}</text>
-    </view>
+    <uni-card title="Hello">
+      <view style="margin-bottom: 20rpx">{{ title }}</view>
+      <button type="primary">按钮</button>
+    </uni-card>
   </view>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-const title = ref('Hello')
+const title = ref('这是一张Uni-UI测试卡片')
 </script>
 
 <style>

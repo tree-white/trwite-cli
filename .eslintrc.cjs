@@ -28,7 +28,7 @@ module.exports = {
     ecmaVersion: 'latest',
   },
   rules: {
-    'prettier/prettier': ['on'],
+    'prettier/prettier': 'error',
     'vue/multi-word-component-names': ['off'],
     'vue/no-setup-props-destructure': ['off'],
     'vue/no-deprecated-html-element-is': ['off'],
