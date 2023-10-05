@@ -11,7 +11,8 @@
     "format": "prettier '**/*.{js,ts,vue}' --write",
     "format-watch": "onchange -d 1000 '**/*.{js,ts,vue}' --prettier --config .prettierrc.json --write {{changed}}",
     "prepare": "husky install",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "commit": "cz"
   },
   "lint-staged": {
     "**/*.{js,ts,vue}": "eslint --fix --max-warnings 0"
@@ -20,10 +21,14 @@
     "vue": "^3.3.4"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.7.2",
+    "@commitlint/config-conventional": "^17.7.0",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/eslint-config-prettier": "^8.0.0",
     "@vue/eslint-config-typescript": "^12.0.0",
     "@vue/tsconfig": "^0.4.0",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.50.0",
     "eslint-plugin-vue": "^9.17.0",
     "husky": "^8.0.0",
