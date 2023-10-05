@@ -1,5 +1,5 @@
 {
-  "name": "vue3-ts",
+  "name": "{{ projectName }}",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -38,5 +38,7 @@
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
     "vue-tsc": "^1.8.5"
-  }
+  },
+  "description": "{{ description }}",
+  "author": "{{ author  }}"
 }
