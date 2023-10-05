@@ -1,5 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+let a = 1
+console.log('a =>', a)
+</script>
 
-<template>App</template>
+<template>
+  <div class="123">App</div>
+</template>
 
 <style scoped></style>
