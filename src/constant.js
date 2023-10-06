@@ -15,7 +15,7 @@ export const TEMPLATES = {
     replacePath: ['package.json']
   },
   'vue3+vite+ts': {
-    repository: 'github:tree-white/trwite-cli#vue3-ts',
+    repository: 'github:tree-white/trwite-cli#vue3+ts',
     description: 'Vue3 + Vite + TS 初始包, 已加入规范化配件',
     replacePath: ['package.json']
   }

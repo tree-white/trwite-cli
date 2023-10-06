@@ -87,12 +87,14 @@ const init = async () => {
 
         const { templateName, projectName, manage } = answers
         const { repository, replacePath } = TEMPLATES[templateName]
-        const initial = ora(_.Text('开始下载模版中...', 'yellowBright,bold')).start()
+        const pd = usePrompter()
+
+        pd.starting('开始下载模版中...')
 
         download(repository, projectName, { clone: true }, async downloadFail => {
           if (downloadFail) {
             // 下载失败提示
-            initial.fail(chalk.redBright(_.Text(`模版下载失败 => ${downloadFail.message}`, 'redBright')))
+            pd.failed(`模版下载失败 => ${downloadFail.message}`)
             return
           }
 
@@ -101,22 +103,24 @@ const init = async () => {
             answers
           )
 
-          initial.succeed(_.Text('模版下载成功', 'greenBright'))
+          pd.succeeded('模版下载成功')
 
-          const installBundles = ora(_.Text('安装依赖中...', 'blue,bold')).start()
+          pd.starting('开始安装依赖中...')
           const { install } = COMMAND[manage]
           const { status } = await _.execSync(`cd ${projectName} && ${install}`)
           if (!status) {
-            installBundles.fail(_.Text('依赖安装失败,请手动执行:', 'redBright,bold'))
+            pd.failed('依赖安装失败,请手动执行:')
             console.log('')
             console.log(_.Tip(`cd ${projectName}`))
             console.log(_.Tip(install))
             return
           }
-          installBundles.succeed(_.Text('项目初始化成功', 'greenBright,bold'))
+          pd.succeeded('项目初始化成功')
+          console.log('')
+          console.log(_.Tip(`cd ${projectName}`))
         })
       } catch (error) {
-        console.log('>>>>>> 错误了=>', error)
+        console.error('>>>>>> 异常终止=>', error)
       }
     })
 
